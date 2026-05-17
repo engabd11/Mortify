@@ -1,0 +1,32 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Mortify Setup",
+        "description": "Configure Mortify — the AI murder mystery game for your smart home. You need Ollama or LM Studio running locally.",
+        "data": {
+          "llm_url": "Local LLM URL",
+          "llm_model": "Model name",
+          "tts_entity": "TTS entity (optional)",
+          "ha_url": "Home Assistant URL (for QR codes)"
+        },
+        "data_description": {
+          "llm_url": "Ollama: http://localhost:11434 · LM Studio: http://localhost:1234",
+          "llm_model": "e.g. llama3.2, mistral, qwen2.5",
+          "tts_entity": "Leave blank to use the speaker selected in-game",
+          "ha_url": "The URL your guests will use to reach HA (shown in QR codes)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the local LLM. Make sure Ollama or LM Studio is running.",
+      "invalid_url": "Invalid URL format"
+    },
+    "abort": {
+      "already_configured": "Mortify is already configured. Only one instance is supported."
+    },
+    "create_entry": {
+      "default": "Mortify is ready. Open the sidebar to start your mystery."
+    }
+  }
+}
