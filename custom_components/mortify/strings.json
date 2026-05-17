@@ -1,0 +1,23 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Mortify Setup",
+        "description": "Configure Mortify — the AI murder mystery game for your smart home.",
+        "data": {
+          "llm_url": "Local LLM URL (Ollama/LM Studio)",
+          "llm_model": "Model name",
+          "tts_entity": "TTS entity (optional)",
+          "ha_url": "Home Assistant URL (for QR code)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to local LLM",
+      "invalid_url": "Invalid URL"
+    },
+    "abort": {
+      "already_configured": "Mortify is already configured"
+    }
+  }
+}
