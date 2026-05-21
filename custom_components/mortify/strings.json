@@ -1,0 +1,14 @@
+{
+  "title": "Mortify",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Mortify Setup",
+        "description": "Mortify is ready. Open the sidebar and choose your AI agent, speaker, and clue entities to begin a mystery."
+      }
+    },
+    "abort": {
+      "already_configured": "Mortify is already configured."
+    }
+  }
+}
