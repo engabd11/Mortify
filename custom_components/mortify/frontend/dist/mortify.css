@@ -1,0 +1,1330 @@
+/* ────────────────────────────────────────────────────────────────────────
+   Mortify stylesheet — fully self-contained.
+   No Google Fonts, no CDN, no external assets. Uses the system font
+   stack so it renders consistently across iOS / Android / desktop.
+   ──────────────────────────────────────────────────────────────────── */
+
+:host, :root {
+  --bg: #0d0b0e;
+  --surface: #15121a;
+  --surface-2: #1e1a26;
+  --surface-3: #28222e;
+  --border: rgba(180, 140, 80, 0.18);
+  --border-strong: rgba(180, 140, 80, 0.35);
+
+  --gold: #c8a45a;
+  --gold-bright: #e6c277;
+  --gold-dim: rgba(200, 164, 90, 0.3);
+
+  --red: #8b2020;
+  --red-bright: #c93030;
+  --red-dim: rgba(139, 32, 32, 0.25);
+
+  --green: #2d6b4a;
+  --green-bright: #3d9060;
+
+  --text: #e8e0d0;
+  --text-muted: #8a8070;
+  --text-dim: #4a4540;
+
+  --radius: 6px;
+  --radius-lg: 10px;
+  --shadow: 0 6px 24px rgba(0,0,0,0.4);
+
+  --font-display: ui-serif, Georgia, "Times New Roman", serif;
+  --font-body: ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono",
+               Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+*::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100%;
+}
+
+/* The host element used by the admin custom-panel — fills the panel */
+.mty-shadow-host {
+  display: block;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── shared helpers ──────────────────────────────────────────────────── */
+
+.mty-hidden { display: none !important; }
+
+.mty-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.mty-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+  margin: 0 0 4px 0;
+}
+.mty-subtitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin: 0 0 16px 0;
+}
+
+.mty-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.mty-hint {
+  font-size: 13px;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.mty-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.mty-input:focus {
+  outline: none;
+  border-color: var(--gold-dim);
+}
+
+select.mty-input {
+  background-image: linear-gradient(45deg, transparent 50%, var(--gold) 50%),
+                    linear-gradient(135deg, var(--gold) 50%, transparent 50%);
+  background-position: calc(100% - 18px) center, calc(100% - 12px) center;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 32px;
+}
+
+/* ── buttons ─────────────────────────────────────────────────────────── */
+
+.mty-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  border: 1px solid;
+  transition: background 0.15s, border 0.15s, transform 0.05s;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--text);
+  user-select: none;
+}
+.mty-btn:active:not(:disabled) { transform: translateY(1px); }
+.mty-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.mty-btn.primary { background: var(--red); border-color: var(--red-bright); }
+.mty-btn.primary:not(:disabled):hover { background: var(--red-bright); }
+
+.mty-btn.gold { background: transparent; border-color: var(--gold); color: var(--gold); }
+.mty-btn.gold:not(:disabled):hover { background: var(--gold-dim); }
+
+.mty-btn.ghost { background: transparent; border-color: var(--border); color: var(--text-muted); }
+.mty-btn.ghost:not(:disabled):hover { border-color: var(--gold-dim); color: var(--text); }
+
+.mty-btn.danger { background: transparent; border-color: var(--red-bright); color: var(--red-bright); }
+.mty-btn.danger:not(:disabled):hover { background: var(--red-dim); color: var(--text); }
+
+.mty-btn.full { width: 100%; }
+
+/* ── status / connection ─────────────────────────────────────────────── */
+
+.mty-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.mty-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  flex-shrink: 0;
+}
+.mty-status-dot.live { background: var(--green-bright); box-shadow: 0 0 6px var(--green-bright); }
+.mty-status-dot.warn { background: var(--gold); }
+
+/* ── ADMIN panel layout ──────────────────────────────────────────────── */
+
+.mty-admin {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.mty-admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.mty-admin-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  padding: 24px;
+}
+@media (max-width: 900px) {
+  .mty-admin-body { grid-template-columns: 1fr; }
+}
+
+.mty-admin-main { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.mty-admin-side { display: flex; flex-direction: column; gap: 18px; }
+
+.mty-section-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+}
+
+.mty-section-header {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+.mty-section-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.mty-section-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  color: var(--text);
+  margin: 0;
+}
+.mty-section-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Grids for agent / speaker / tts picker cards */
+.mty-pick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+.mty-pick-card {
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s, border 0.15s;
+  min-width: 0;
+}
+.mty-pick-card:hover { border-color: var(--gold-dim); }
+.mty-pick-card.selected {
+  background: linear-gradient(180deg, var(--surface-2), var(--surface-3));
+  border-color: var(--gold);
+}
+.mty-pick-card .name {
+  font-size: 14px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mty-pick-card .sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mty-pick-card.dim { opacity: 0.5; }
+
+/* Entity picker */
+.mty-entity-search {
+  width: 100%;
+  margin-bottom: 8px;
+}
+.mty-entity-toolbar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.mty-entity-toolbar .mty-btn { padding: 6px 12px; font-size: 11px; }
+.mty-entity-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.mty-entity-area {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  margin-top: 10px;
+}
+.mty-entity-area-name {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.mty-entity-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 4px;
+}
+.mty-entity-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px;
+  min-width: 0;
+}
+.mty-entity-row:hover { border-color: var(--gold-dim); }
+.mty-entity-row.selected {
+  background: var(--surface-3);
+  border-color: var(--gold);
+}
+.mty-entity-check {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.mty-entity-row .label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mty-entity-row .domain { font-family: var(--font-mono); font-size: 9px; color: var(--text-muted); text-transform: uppercase; }
+.mty-entity-row .state { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); }
+
+/* QR sidebar */
+.mty-qr-box {
+  background: white;
+  padding: 12px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Cap the QR so it never dominates a wide screen, while staying scannable
+     on a phone. Was width:100% (filled the whole card column). */
+  width: min(280px, 70vw);
+  max-width: 100%;
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+.mty-qr-box img,
+.mty-qr-code-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated; /* keep QR modules crisp when scaled */
+}
+.mty-qr-url {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  word-break: break-all;
+  text-align: center;
+  margin-top: 8px;
+}
+.mty-qr-code {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  letter-spacing: 0.2em;
+  text-align: center;
+  color: var(--gold);
+  margin-top: 4px;
+}
+
+/* Player list (sidebar) */
+.mty-player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mty-player-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+.mty-player-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--gold);
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+.mty-player-row .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mty-player-row .role { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); }
+.mty-player-row .badge { font-family: var(--font-mono); font-size: 10px; color: var(--gold); }
+.mty-player-row .badge.correct { color: var(--green-bright); }
+
+/* Act track */
+.mty-act-track {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.mty-act-step {
+  flex: 1;
+  min-width: 100px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-align: center;
+}
+.mty-act-step.active {
+  background: var(--surface-3);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.mty-act-step.done {
+  border-color: var(--green);
+  color: var(--green-bright);
+}
+
+/* Narration */
+.mty-narration {
+  background: var(--surface-2);
+  border-left: 3px solid var(--gold);
+  padding: 18px 22px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  font-style: italic;
+  color: var(--text);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin: 8px 0 18px 0;
+}
+
+/* Suspect cards */
+.mty-suspects {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+.mty-suspect {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  min-width: 0;
+}
+.mty-suspect .emoji {
+  font-size: 28px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.mty-suspect .role-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--gold);
+  margin: 0 0 2px 0;
+}
+.mty-suspect .player-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.mty-suspect .alibi {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* Reveal screen */
+.mty-reveal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px 20px;
+}
+.mty-reveal h1 {
+  font-family: var(--font-display);
+  font-size: 36px;
+  color: var(--red-bright);
+  margin: 0 0 8px 0;
+  letter-spacing: 0.02em;
+}
+.mty-reveal .killer-box {
+  margin: 20px 0;
+  padding: 24px;
+  background: var(--surface-2);
+  border: 1px solid var(--red);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 460px;
+}
+.mty-reveal .killer-emoji { font-size: 56px; line-height: 1; }
+.mty-reveal .killer-role {
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--gold);
+  margin: 12px 0 4px 0;
+}
+.mty-reveal .killer-player {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.mty-reveal .motive {
+  font-style: italic;
+  color: var(--text);
+  margin-top: 12px;
+  line-height: 1.5;
+}
+.mty-reveal .scores {
+  width: 100%;
+  max-width: 460px;
+  margin-top: 18px;
+}
+
+/* ── PLAYER (mobile-first) ───────────────────────────────────────────── */
+
+.mty-player {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px 18px 80px 18px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.mty-player-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 24px;
+  margin-bottom: 28px;
+}
+.mty-player-logo {
+  font-family: var(--font-display);
+  font-size: 32px;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+}
+.mty-player-tagline {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.mty-join-form { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+
+.mty-tab-bar {
+  display: flex;
+  gap: 2px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  padding: 4px;
+  margin-bottom: 18px;
+}
+.mty-tab {
+  flex: 1;
+  padding: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: center;
+}
+.mty-tab.active {
+  background: var(--surface-3);
+  color: var(--gold);
+}
+
+.mty-role-card {
+  background: var(--surface);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 18px;
+}
+.mty-role-card .role-emoji { font-size: 36px; line-height: 1; }
+.mty-role-card .role-name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--gold);
+  margin: 6px 0 2px 0;
+}
+.mty-role-card .role-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.mty-suspect-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mty-suspect-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.mty-suspect-row .emoji { font-size: 28px; }
+.mty-suspect-row .role-name { font-family: var(--font-display); font-size: 16px; color: var(--text); margin: 0; }
+.mty-suspect-row .alibi { font-size: 12px; color: var(--text-muted); font-style: italic; }
+
+.mty-chat-screen { display: flex; flex-direction: column; height: 70vh; min-height: 400px; }
+.mty-chat-back {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  margin-bottom: 8px;
+}
+.mty-chat-suspect {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0 14px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.mty-chat-suspect .emoji { font-size: 28px; }
+.mty-chat-log {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 12px;
+}
+.mty-msg {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 86%;
+}
+.mty-msg.me {
+  align-self: flex-end;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold);
+  color: var(--text);
+}
+.mty-msg.them {
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-style: italic;
+}
+.mty-msg.thinking {
+  color: var(--text-muted);
+  font-style: italic;
+}
+.mty-chat-input {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.mty-chat-input .mty-input { flex: 1; }
+
+/* Clue board */
+.mty-clue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mty-clue-row {
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 14px;
+}
+.mty-clue-row.found { border-color: var(--green); }
+.mty-clue-row .label { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; }
+.mty-clue-row .name { color: var(--text); margin-top: 2px; }
+.mty-clue-row .clue-text {
+  font-style: italic;
+  color: var(--text);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.mty-empty {
+  padding: 30px 20px;
+  text-align: center;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* Accusation */
+.mty-accuse-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mty-accuse-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.mty-accuse-row.selected { border-color: var(--red-bright); background: var(--red-dim); }
+
+/* Toast */
+.mty-toast {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface-3);
+  border: 1px solid var(--gold-dim);
+  color: var(--text);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  max-width: calc(100% - 32px);
+  text-align: center;
+}
+.mty-toast.show { opacity: 1; }
+
+/* Loading overlay */
+.mty-loading {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 11, 14, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.mty-loading-inner {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--gold);
+}
+.mty-loading-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+@keyframes mty-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.mty-pulse { animation: mty-pulse 2s infinite; }
+
+/* ─────────────────────────────────────────────────────────────────────
+   Flat suffix-class aliases used by mortify.js.
+   The original CSS above uses BEM-style descendant selectors
+   (e.g. .mty-suspect .emoji); the JS bundle uses flat suffix classes
+   (e.g. .mty-suspect-emoji) because they're simpler to emit from
+   vanilla DOM construction. These rules bridge the two so we don't
+   have to rewrite the whole stylesheet.
+   ───────────────────────────────────────────────────────────────── */
+
+/* Button modifiers — mirror the .mty-btn.primary / .gold / .ghost / .danger forms */
+.mty-btn-primary { background: var(--red); border-color: var(--red-bright); color: var(--text); }
+.mty-btn-primary:not(:disabled):hover { background: var(--red-bright); }
+.mty-btn-gold { background: transparent; border-color: var(--gold); color: var(--gold); }
+.mty-btn-gold:not(:disabled):hover { background: var(--gold-dim); }
+.mty-btn-ghost { background: transparent; border-color: var(--border); color: var(--text-muted); }
+.mty-btn-ghost:not(:disabled):hover { border-color: var(--gold-dim); color: var(--text); }
+.mty-btn-danger { background: transparent; border-color: var(--red-bright); color: var(--red-bright); }
+.mty-btn-danger:not(:disabled):hover { background: var(--red-dim); color: var(--text); }
+
+/* Picker card modifiers */
+.mty-pick-card-selected {
+  border-color: var(--gold);
+  background: var(--surface-3);
+}
+.mty-pick-card-disabled { opacity: 0.45; cursor: not-allowed; }
+.mty-pick-card-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.mty-pick-card-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  word-break: break-all;
+}
+.mty-pick-card-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 6px;
+  display: inline-block;
+}
+
+/* Entity row body / meta */
+.mty-entity-row-selected {
+  border-color: var(--gold);
+  background: var(--surface-3);
+}
+.mty-entity-row-body { flex: 1; min-width: 0; overflow: hidden; }
+.mty-entity-row-name {
+  font-size: 13px; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mty-entity-row-meta {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: 0.05em; margin-top: 2px;
+}
+
+/* Section row/col for inline 2-up controls */
+.mty-section-row {
+  display: flex; gap: 14px; flex-wrap: wrap;
+}
+.mty-section-col {
+  display: flex; flex-direction: column; gap: 6px;
+  flex: 1; min-width: 140px;
+}
+.mty-section-launch {
+  display: flex; gap: 12px; align-items: center;
+  flex-wrap: wrap; padding: 6px 0;
+}
+
+/* Card variants */
+.mty-card-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.mty-card-meta {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.mty-card-meta > span { white-space: nowrap; }
+.mty-card-hero {
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border-color: var(--gold-dim);
+}
+.mty-card-killer {
+  text-align: center;
+  padding: 32px 24px;
+  border-color: var(--red-bright);
+}
+.mty-killer-emoji { font-size: 64px; line-height: 1; margin-bottom: 12px; }
+.mty-killer-name {
+  font-family: var(--font-display); font-size: 26px;
+  color: var(--gold); margin-bottom: 4px;
+}
+.mty-killer-player {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: 0.12em; margin-bottom: 14px;
+}
+.mty-killer-motive {
+  font-family: var(--font-body);
+  font-size: 15px; font-style: italic;
+  color: var(--text); max-width: 540px;
+  margin: 0 auto; line-height: 1.5;
+}
+
+/* Suspect rows (flat-suffix variant) */
+.mty-suspect-emoji { font-size: 28px; line-height: 1; }
+.mty-suspect-row-name {
+  font-family: var(--font-display);
+  font-size: 16px; color: var(--text);
+}
+.mty-suspect-row-player {
+  font-size: 12px; color: var(--text-muted);
+  font-style: italic;
+}
+.mty-suspect-row-cta {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--gold); margin-left: auto;
+  letter-spacing: 0.08em;
+}
+.mty-suspect-row-tap { cursor: pointer; }
+.mty-suspect-row-tap:hover { border-color: var(--gold-dim); }
+
+/* Player rows (flat-suffix variant) */
+.mty-player-row-name {
+  font-size: 14px; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mty-player-row-role {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.mty-player-row-score {
+  font-family: var(--font-mono); font-size: 13px;
+  color: var(--gold); margin-left: auto;
+}
+
+/* Role card (flat-suffix variant) */
+.mty-role-card-emoji { font-size: 36px; line-height: 1; }
+.mty-role-card-name {
+  font-family: var(--font-display);
+  font-size: 20px; color: var(--gold);
+  margin: 2px 0;
+}
+.mty-role-card-desc {
+  font-size: 13px; color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Tabs (flat-suffix variant) */
+.mty-tab-active {
+  color: var(--text);
+  border-bottom-color: var(--gold);
+}
+
+/* Act-step variants */
+.mty-act-step-active {
+  background: var(--surface-3);
+  color: var(--gold);
+  border-color: var(--gold);
+}
+.mty-act-step-done {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* Badges */
+.mty-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  margin-right: 4px;
+}
+.mty-badge-gold {
+  color: var(--gold);
+  border-color: var(--gold-dim);
+}
+
+/* Toasts */
+.mty-toast {
+  position: fixed;
+  bottom: 20px; left: 50%;
+  transform: translate(-50%, 20px);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 999;
+  max-width: 400px;
+}
+.mty-toast-show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.mty-toast-error {
+  border-color: var(--red-bright);
+  color: var(--red-bright);
+}
+
+/* Game grid */
+.mty-game-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+@media (max-width: 800px) {
+  .mty-game-grid { grid-template-columns: 1fr; }
+}
+
+/* Clue rows */
+.mty-clue-list {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.mty-clue-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.mty-clue-row:hover { border-color: var(--gold-dim); }
+.mty-clue-row-found {
+  border-color: var(--green);
+  background: var(--surface);
+  cursor: default;
+}
+.mty-clue-row-icon {
+  width: 24px;
+  text-align: center;
+  font-size: 14px;
+}
+.mty-clue-row-name {
+  font-size: 13px; color: var(--text);
+}
+.mty-clue-row-area {
+  font-family: var(--font-mono);
+  font-size: 10px; color: var(--text-muted);
+  text-transform: uppercase; margin-top: 2px;
+  letter-spacing: 0.05em;
+}
+
+/* Accusation list */
+.mty-accuse-list {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.mty-accuse-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.mty-accuse-row:hover {
+  border-color: var(--red-bright);
+}
+
+/* Chat message variants (mty-msg.me / .them → mty-msg-you / -suspect) */
+.mty-msg-you {
+  align-self: flex-end;
+  background: var(--red-dim);
+  border-color: var(--red);
+}
+.mty-msg-suspect {
+  align-self: flex-start;
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+/* QR url code (the human-readable code under the QR) */
+.mty-qr-url-code {
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--gold);
+  letter-spacing: 0.18em;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+/* Clue / interrogation message variant — narrator-style evidence line */
+.mty-msg-clue {
+  align-self: center;
+  background: var(--gold-dim, rgba(196, 160, 80, 0.14));
+  border: 1px solid var(--gold, #c4a050);
+  color: var(--gold, #c4a050);
+  font-style: italic;
+  text-align: center;
+  max-width: 92%;
+}
+
+/* Clue list progress hint above the locked/unlocked clue rows */
+.mty-clue-hint {
+  font-size: 13px;
+  color: var(--text-dim, #9a9a9a);
+  margin: 4px 2px 10px;
+  text-align: center;
+}
+
+/* Confront bar — the one-shot high-stakes control under the chat input */
+.mty-confront-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px dashed var(--red, #a23);
+  border-radius: 10px;
+  background: var(--red-dim, rgba(170, 34, 51, 0.12));
+}
+.mty-confront-label {
+  flex: 1 1 100%;
+  font-size: 13px;
+  color: var(--red, #c4475a);
+  font-weight: 600;
+}
+.mty-confront-select {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--surface-2, #1c1c1c);
+  color: var(--text, #eee);
+  border: 1px solid var(--border, #333);
+}
+.mty-confront-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--red, #a23);
+  background: var(--red, #a23);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.mty-confront-btn:disabled { opacity: 0.5; cursor: default; }
+.mty-confront-spent {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-dim, #888);
+  text-align: center;
+  font-style: italic;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Additions: QR url code, light picker, clue rows, chat controls,
+   human-killer overlay/banner.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.mty-qr-url-code {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+/* Light picker (admin) reuses the entity-picker look. */
+.mty-light-toggle {
+  margin-bottom: 12px;
+}
+.mty-light-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.mty-light-toggle-label input { width: 18px; height: 18px; }
+
+/* Clue rows — expandable unlocked clues + opaque locked slots. */
+.mty-clue-row-body { flex: 1; min-width: 0; }
+.mty-clue-row-open { background: rgba(212, 175, 55, 0.08); }
+.mty-clue-row-text {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+.mty-clue-row-tap-hint {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.mty-clue-row-locked { opacity: 0.55; }
+.mty-clue-row-locked .mty-clue-row-name { color: var(--text-muted); }
+
+/* Chat dynamic controls wrapper. */
+.mty-chat-controls { display: block; }
+
+/* Human killer: persistent secret banner on the game screen. */
+.mty-killer-banner {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(150, 20, 20, 0.22), rgba(90, 12, 12, 0.28));
+  border: 1px solid rgba(200, 40, 40, 0.5);
+  color: #ffd9d9;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Human killer: the question/evasion overlay. */
+.mty-killer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(8, 6, 9, 0.82);
+  backdrop-filter: blur(4px);
+}
+.mty-killer-modal {
+  width: 100%;
+  max-width: 460px;
+  background: var(--surface, #18141b);
+  border: 1px solid rgba(200, 40, 40, 0.5);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+.mty-killer-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #ff6b6b;
+  margin-bottom: 12px;
+}
+.mty-killer-q-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.mty-killer-q {
+  font-size: 17px;
+  line-height: 1.45;
+  margin: 6px 0 14px;
+  color: var(--text);
+}
+.mty-killer-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.mty-killer-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.mty-killer-option {
+  text-align: left;
+  padding: 13px 15px;
+  border-radius: 12px;
+  border: 1px solid var(--border, rgba(255,255,255,0.12));
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.45;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.mty-killer-option:hover {
+  background: rgba(200, 40, 40, 0.16);
+  border-color: rgba(200, 40, 40, 0.6);
+}
