@@ -1,0 +1,82 @@
+{
+  "title": "The Unlit Candle",
+  "victim_name": "Lord Edmund Blackwell",
+  "victim_description": "The patriarch, wealthy and feared, had called everyone here to revise his will.",
+  "crime_scene": "the study",
+  "weapon": "a heavy crystal decanter",
+  "killer_id": "lawyer",
+  "time_of_death": "11:15 PM",
+  "opening_narration": "Lord Blackwell had gathered six people to Blackwell Manor for the reading of his revised will — a document that would change all their fortunes. At 11:15 PM a crash echoed through the halls. By the time the guests reached the study, the old man lay still, a shattered decanter beside him. The will, half-burned in the fireplace, would now never be read. One of you knows exactly why.",
+  "motive": "The lawyer had been embezzling from the Blackwell estate for years. The revised will ordered a full audit — due to begin Monday morning.",
+  "suspects": [
+    {
+      "role_id": "butler",
+      "alibi": "I was polishing silver in the pantry from ten until midnight. The kitchen staff can confirm.",
+      "secret": "I saw the lawyer leave the study at 11:10 PM, looking pale. He didn't see me.",
+      "npc_persona": "Stiff, formal, speaks in clipped sentences. Looks disapprovingly at anyone who raises their voice."
+    },
+    {
+      "role_id": "doctor",
+      "alibi": "I retired to the guest wing at ten. My sleeping draught had taken effect — I heard nothing.",
+      "secret": "Lord Blackwell had recently consulted me about his health. He suspected someone was poisoning him — slowly, over months.",
+      "npc_persona": "Measured, clinical. Drops unsettling medical facts into casual conversation."
+    },
+    {
+      "role_id": "artist",
+      "alibi": "I was on the east terrace painting the moon — my canvas is still wet, if you care to check.",
+      "secret": "The lawyer commissioned a forged signature from me last month. A Blackwell property deed.",
+      "npc_persona": "Dramatic, theatrical, gestures wildly. Treats the investigation as performance art."
+    },
+    {
+      "role_id": "lawyer",
+      "alibi": "I was in the library reviewing the documents for the morning. The door was locked from the inside.",
+      "secret": "Three years of doctored accounts. Monday's audit would have sent me to prison — not a civil suit.",
+      "npc_persona": "Polished, evasive, answers questions with questions. Smiles too much."
+    }
+  ],
+  "clues": [
+    {
+      "id": "clue_1",
+      "title": "The Half-Burned Ledger",
+      "text": "A charred corner of the estate accounts survived the fire. The last legible entry shows a transfer of fifty thousand pounds to an offshore account — authorised by the lawyer the day before.",
+      "held_by": "butler",
+      "implicates": "lawyer",
+      "contradicts": "lawyer",
+      "relevance": "Financial evidence"
+    },
+    {
+      "id": "clue_2",
+      "title": "The Missing Key",
+      "text": "The study door was found unlocked despite the lawyer's claim. The butler's master key is the only one that could have opened it from outside. But the butler was in the pantry — or so he says.",
+      "held_by": "doctor",
+      "implicates": "lawyer",
+      "contradicts": null,
+      "relevance": "Who entered the study"
+    },
+    {
+      "id": "clue_3",
+      "title": "The Forged Signature",
+      "text": "A property deed with Lord Blackwell's signature — but the ink is barely dry and the stroke doesn't match his hand. Scrawled on the back: a lawyer's reference number.",
+      "held_by": "artist",
+      "implicates": "lawyer",
+      "contradicts": "lawyer",
+      "relevance": "Forgery trail"
+    },
+    {
+      "id": "clue_4",
+      "title": "A Clean Sleeve",
+      "text": "The lawyer's left cuff has a faint damp patch — as though hastily wiped. No trace of blood, but it doesn't match his otherwise immaculate dress.",
+      "held_by": "lawyer",
+      "implicates": "doctor",
+      "contradicts": null,
+      "relevance": "A red herring planted by the killer"
+    }
+  ],
+  "acts": [
+    { "act": 1, "title": "The Discovery", "narration": "Lord Blackwell lies dead in his study. The will — and half a lifetime of secrets — has gone up in smoke. The suspects gather in the drawing room. No one is to leave." },
+    { "act": 2, "title": "Gathering Shadows", "narration": "The first testimonies are given. Alibis are thin. Someone in this room is lying — and they know Monday morning is getting closer." },
+    { "act": 3, "title": "Hidden Truths", "narration": "The clues are mounting. Financial records, a forged deed, a locked door that wasn't — every trail leads back to the same corner of the room." },
+    { "act": 4, "title": "The Accusation", "narration": "The time has come. All evidence gathered, all questions asked. Look around this room. Name the killer." }
+  ],
+  "reveal_narration": "Three years of embezzlement, one revised will, and a Monday morning audit that would have ended everything. The lawyer struck out of desperation — a crystal decanter to the skull, then tossed the will into the fire. But the half-burned ledger, the forged deed, and a butler's well-timed observation told the story the killer tried so hard to erase. Justice, at last."
+}
