@@ -64,6 +64,9 @@ def _install_ha_stubs() -> None:
     ha_http = types.ModuleType("homeassistant.components.http")
     sys.modules["homeassistant.components.http"] = ha_http
     ha_http.HomeAssistantView = type("HomeAssistantView", (), {})
+    # Some HA versions have StaticPathConfig, others don't — stub it.
+    if not hasattr(ha_http, "StaticPathConfig"):
+        ha_http.StaticPathConfig = type("StaticPathConfig", (), {})
 
     ha_frontend = types.ModuleType("homeassistant.components.frontend")
     sys.modules["homeassistant.components.frontend"] = ha_frontend
@@ -79,6 +82,12 @@ def _install_ha_stubs() -> None:
 
 
 _install_ha_stubs()
+
+# In CI, the real homeassistant is already imported and may not have
+# StaticPathConfig (added in a later HA release). Patch it unconditionally.
+import homeassistant.components.http as _ha_http
+if not hasattr(_ha_http, "StaticPathConfig"):
+    _ha_http.StaticPathConfig = type("StaticPathConfig", (), {})
 
 
 # ---------------------------------------------------------------------------
