@@ -21,4 +21,4 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install pytest pytest-homeassistant-custom-component
-      - run: pytest tests/ --asyncio-mode=auto
+      - run: pytest --asyncio-mode=auto --ignore=custom_components

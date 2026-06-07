@@ -1,14 +1,24 @@
 {
   "domain": "mortify",
   "name": "Mortify",
-  "version": "1.2.0",
-  "documentation": "https://github.com/engabd11/mortify",
-  "issue_tracker": "https://github.com/engabd11/mortify/issues",
-  "codeowners": ["@engabd11"],
+  "after_dependencies": [
+    "conversation"
+  ],
+  "codeowners": [
+    "@engabd11"
+  ],
   "config_flow": true,
-  "dependencies": ["http", "frontend", "websocket_api"],
-  "after_dependencies": ["conversation"],
+  "dependencies": [
+    "http",
+    "frontend",
+    "websocket_api"
+  ],
+  "documentation": "https://github.com/engabd11/mortify",
   "integration_type": "service",
   "iot_class": "local_push",
-  "requirements": ["qrcode[pil]==7.4.2"]
+  "issue_tracker": "https://github.com/engabd11/mortify/issues",
+  "requirements": [
+    "qrcode[pil]==7.4.2"
+  ],
+  "version": "1.2.0"
 }
