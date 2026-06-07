@@ -8,6 +8,14 @@ from pathlib import Path
 
 
 # ---------------------------------------------------------------------------
+# Ensure custom_components is importable.
+# ---------------------------------------------------------------------------
+
+REPO_ROOT = Path(__file__).parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+
+
+# ---------------------------------------------------------------------------
 # Stub the homeassistant package just enough that our modules import.
 # ---------------------------------------------------------------------------
 
@@ -79,10 +87,7 @@ _install_ha_stubs()
 
 def test_manifest_valid():
     """Manifest must be valid JSON with required keys."""
-    manifest_path = (
-        Path(__file__).parent.parent
-        / "custom_components" / "mortify" / "manifest.json"
-    )
+    manifest_path = REPO_ROOT / "custom_components" / "mortify" / "manifest.json"
     with open(manifest_path) as f:
         data = json.load(f)
     assert data["domain"] == "mortify"
@@ -98,10 +103,7 @@ def test_const_imports():
 
 def test_stock_mysteries_exist():
     """Stock mystery files must be present and valid JSON."""
-    mysteries_dir = (
-        Path(__file__).parent.parent
-        / "custom_components" / "mortify" / "mysteries"
-    )
+    mysteries_dir = REPO_ROOT / "custom_components" / "mortify" / "mysteries"
     files = list(mysteries_dir.glob("*.json"))
     assert len(files) >= 2, "Expected at least 2 stock mysteries"
 
@@ -111,7 +113,7 @@ def test_stock_mysteries_exist():
         assert "title" in data, f"{fpath.name}: missing 'title'"
         assert "suspects" in data, f"{fpath.name}: missing 'suspects'"
         assert "clues" in data, f"{fpath.name}: missing 'clues'"
-        assert "killer" in data, f"{fpath.name}: missing 'killer'"
+        assert "killer_id" in data, f"{fpath.name}: missing 'killer_id'"
 
 
 def test_config_flow_imports():
