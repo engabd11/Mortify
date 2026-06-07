@@ -3,8 +3,10 @@
 > **AI-powered murder mystery party game for Home Assistant** — scan a QR code, interrogate AI-powered suspects, accuse the killer. Architected after [Quizify](https://github.com/engabd11/Quizify); inspired by [Beatify](https://github.com/mholzi/beatify).
 
 [![Home Assistant 2024.1+](https://img.shields.io/badge/Home%20Assistant-2024.1%2B-41BDF5?style=flat-square&logo=homeassistant&logoColor=white)](https://www.home-assistant.io/)
+[![Version 1.2.0](https://img.shields.io/badge/Version-1.2.0-ff5cf0?style=flat-square)](#)
 [![Local AI](https://img.shields.io/badge/AI-100%25%20Local-2d6b4a?style=flat-square)](https://ollama.com/)
 [![License MIT](https://img.shields.io/badge/License-MIT-gold?style=flat-square)](LICENSE)
+[![Validate](https://github.com/engabd11/Mortify/actions/workflows/validate.yml/badge.svg)](https://github.com/engabd11/Mortify/actions)
 
 ---
 
@@ -28,6 +30,7 @@ Mortify turns your smart home into a live murder mystery. A local AI — any con
 - **🔐 HMAC-signed player tokens** — Players keep their identity across reloads
 - **💡 Dramatic lighting** — Your real lights (incl. Hue groups) shift colour per act and flash on big moments
 - **🔊 Optional TTS narration** — Dramatic act announcements through your speakers, with an adjustable speaking speed
+- **📝 Story logging** — Every generated mystery saved to `story_logs/` with timestamps for post-game analysis
 - **🌐 Fully local** — No CDNs, no Google Fonts, no telemetry, nothing leaves your network
 - **⚡ Real-time multiplayer** — WebSocket-driven, instant updates for every player
 
@@ -44,7 +47,7 @@ Mortify turns your smart home into a live murder mystery. A local AI — any con
 ## Install via HACS
 
 1. Open HACS → ⋮ Menu → **Custom Repositories**
-2. URL: `https://github.com/yourusername/mortify`
+2. URL: `https://github.com/engabd11/Mortify`
 3. Category: **Integration**
 4. Install **Mortify**, then restart Home Assistant
 5. *Settings → Devices & Services → Add Integration → Mortify*
@@ -54,7 +57,7 @@ Mortify turns your smart home into a live murder mystery. A local AI — any con
 
 ```bash
 cd /config/custom_components
-git clone https://github.com/yourusername/mortify.git mortify
+git clone https://github.com/engabd11/Mortify.git mortify
 # Restart Home Assistant
 ```
 
