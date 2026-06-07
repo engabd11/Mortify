@@ -506,19 +506,27 @@ class GameSession:
             self._assign_roles(story)
             self.state = STATE_ACT_1
 
-        # Music starts now (the admin's chosen "scene" speaker).
+        # Set the act-1 lighting mood.
+        await self._set_lights(STATE_ACT_1)
+
+        # Announce act 1 first — let the TTS finish before music starts,
+        # otherwise the music stream cuts off the narration.
+        narration = story.get("opening_narration", "") or self._fallback_act_narration(1)
+        await self._announce(narration)
+
+        # Wait for TTS playback to finish before starting background music.
+        # Estimate: ~150 WPM ≈ 2.5 words/sec, plus a 2 s buffer for engine
+        # ramp-up.  Minimum 4 s so even short intros get room to breathe.
+        word_count = len(narration.split())
+        tts_duration = max(4.0, (word_count / 2.5) + 2.0)
+        await asyncio.sleep(tts_duration)
+
+        # Music starts after the opening narration has played out.
         if self._music_start_cb is not None:
             try:
                 await self._music_start_cb()
             except Exception:  # noqa: BLE001
                 _LOGGER.debug("Music start callback raised", exc_info=True)
-
-        # Set the act-1 lighting mood.
-        await self._set_lights(STATE_ACT_1)
-
-        # Announce act 1.
-        narration = story.get("opening_narration", "") or self._fallback_act_narration(1)
-        await self._announce(narration)
         await self._emit(
             EVENT_ACT_STARTED,
             {
