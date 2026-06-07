@@ -293,6 +293,22 @@ Output exactly {clue_target} clue objects in the clues array."""
 
     parsed["_cast"] = cast
     parsed["generated_at"] = datetime.now(tz=None).isoformat(timespec="seconds")
+
+    # Log the story for post-game debugging.
+    try:
+        from pathlib import Path as _Path
+        log_dir = _Path(__file__).parent / "story_logs"
+        log_dir.mkdir(parents=True, exist_ok=True)
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        title = parsed.get("title", "untitled")
+        safe = "".join(c for c in title if c.isalnum() or c in " _-")[:40].rstrip()
+        log_path = log_dir / f"{ts}_{safe}.json"
+        with log_path.open("w", encoding="utf-8") as fh:
+            json.dump(parsed, fh, indent=2, ensure_ascii=False)
+        _LOGGER.info("Story logged: %s", log_path.name)
+    except Exception:  # noqa: BLE001
+        _LOGGER.debug("Story log write failed (non-fatal)", exc_info=True)
+
     return parsed
 
 

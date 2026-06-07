@@ -1,0 +1,97 @@
+{
+  "title": "The Last Voyage",
+  "victim_name": "Captain Reginald Frost",
+  "victim_description": "A retired naval officer turned shipping magnate, celebrating his retirement aboard his prized yacht.",
+  "crime_scene": "the main deck",
+  "weapon": "a rigging knife from the captain's own collection",
+  "killer_id": "widow",
+  "time_of_death": "12:08 AM",
+  "opening_narration": "The Frost yacht drifted silently under a moonless sky, anchored three miles offshore for Captain Frost's retirement celebration. Champagne flowed, toasts were made, and old rivalries simmered beneath the surface. At twelve minutes past midnight, a scream cut through the night. The Captain was found on the main deck, a ceremonial rigging knife in his chest. The yacht's radio had been sabotaged. No one could leave. No one could call for help.",
+  "motive": "The widow had married the Captain for his fortune, but he'd recently discovered her affair with his business rival and was filing for annulment the moment they docked — leaving her with nothing.",
+  "suspects": [
+    {
+      "role_id": "widow",
+      "alibi": "I was in my cabin changing out of my evening gown. I must have been there for an hour — these clasps are impossible alone.",
+      "secret": "The Captain promised me the world. Instead he gave me a prenuptial agreement and a locked filing cabinet.",
+      "npc_persona": "Fragile, breathless, cries at convenient moments. Mentions her 'poor nerves' whenever pressed."
+    },
+    {
+      "role_id": "journalist",
+      "alibi": "I was on the stern deck taking night photographs of the coastline. There's no evidence — the camera uses film.",
+      "secret": "The Captain was about to be exposed for running guns through the Mediterranean. I had the documents in my cabin.",
+      "npc_persona": "Intense, chain-smokes, writes notes constantly. Treats everyone like a source."
+    },
+    {
+      "role_id": "cook",
+      "alibi": "I was in the galley cleaning up from dinner until almost midnight. The dishwasher broke — ask anyone about the flooding.",
+      "secret": "The Captain owed me six months wages and laughed when I asked. But a kitchen accident would have been easier than this.",
+      "npc_persona": "Loud, jovial, slams pots for emphasis. Sweats when questioned directly."
+    },
+    {
+      "role_id": "doctor",
+      "alibi": "I was in the wheelhouse reviewing the Captain's medical records. He'd been feeling unwell — palpitations, dizziness. I had prescribed rest.",
+      "secret": "The 'palpitations' were actually arsenic. Low doses over weeks, added to his evening brandy. The killer couldn't wait for a natural death.",
+      "npc_persona": "Detached, professional, consults a pocket watch frequently. Speaks of the victim as a 'case' rather than a person."
+    },
+    {
+      "role_id": "gardener",
+      "alibi": "I don't belong on boats. I was in my bunk being violently seasick from eleven onward. My cabin mate can confirm.",
+      "secret": "I'm not really a gardener. I'm an insurance investigator. The Captain's last three ships all sank under suspicious circumstances.",
+      "npc_persona": "Queasy, pale, grips the table for balance. Underestimated by everyone — deliberately so."
+    }
+  ],
+  "clues": [
+    {
+      "id": "clue_1",
+      "title": "The Annulment Papers",
+      "text": "Folded inside the Captain's jacket pocket: draft annulment papers dated the very morning of the party. A sticky note attached reads 'Final signatures Monday.' The widow's fingerprints are all over them — but she claimed she had no idea.",
+      "held_by": "journalist",
+      "implicates": "widow",
+      "contradicts": "widow",
+      "relevance": "Motive"
+    },
+    {
+      "id": "clue_2",
+      "title": "The Arsenic Brandy",
+      "text": "The doctor's medical report shows trace arsenic in the Captain's blood sample from LAST WEEK. Someone was poisoning him slowly. The rigging knife was just the finale.",
+      "held_by": "doctor",
+      "implicates": "widow",
+      "contradicts": null,
+      "relevance": "Method"
+    },
+    {
+      "id": "clue_3",
+      "title": "The Sabotaged Radio",
+      "text": "The yacht's radio wires were cut with precision — not brute force, but a careful incision. The same blade angle as the murder weapon. This was planned.",
+      "held_by": "cook",
+      "implicates": "widow",
+      "contradicts": "widow",
+      "relevance": "Premeditation"
+    },
+    {
+      "id": "clue_4",
+      "title": "The Insurance File",
+      "text": "Three ships, three sinkings, three large payouts — all to the SAME holding company that owns the yacht. The gardener's insurance badge has a photo that matches the registered agent.",
+      "held_by": "gardener",
+      "implicates": "cook",
+      "contradicts": null,
+      "relevance": "A red herring — insurance fraud, not murder"
+    },
+    {
+      "id": "clue_5",
+      "title": "The Broken Clasp",
+      "text": "A broken pearl from the widow's evening gown was found near the murder scene. She claimed she was in her cabin the whole time, struggling with the clasps. The pearl says otherwise.",
+      "held_by": "widow",
+      "implicates": "cook",
+      "contradicts": null,
+      "relevance": "The killer's clumsy misdirection"
+    }
+  ],
+  "acts": [
+    { "act": 1, "title": "The Discovery", "narration": "A scream shatters the night. Captain Frost lies dead on his own deck, a ceremonial knife in his chest. The yacht drifts silently, three miles from shore. The radio is dead." },
+    { "act": 2, "title": "Gathering Shadows", "narration": "The guests are assembled in the salon. Five suspects, one body, and a web of secrets stretching back weeks before tonight." },
+    { "act": 3, "title": "Hidden Truths", "narration": "Arsenic, annulment papers, sabotaged communications — the evidence paints a darker picture than a single moment of violence. Someone planned this." },
+    { "act": 4, "title": "The Accusation", "narration": "All clues are on the table. The killer sits among you, waiting. Look at their face. Name them." }
+  ],
+  "reveal_narration": "She played the grieving widow perfectly — tears, trembling, the broken clasp as 'proof' of her innocence. But the annulment papers in his pocket, the arsenic in his blood, and the pearl found near his body told a different story. The Captain was taking everything from her — her wealth, her status, her future. She'd been poisoning him for weeks, but when she learned about the annulment, the knife was faster. Justice finds even those who hide behind crocodile tears."
+}
