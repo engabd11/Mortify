@@ -31,6 +31,7 @@ from .const import (
     PLAYER_TOKEN_TTL,
 )
 from .game import GameSession, GameSettings
+from .lights import MortifyLights
 from .llm_client import list_conversation_agents
 
 _LOGGER = logging.getLogger(__name__)
@@ -59,6 +60,8 @@ class MortifyManager:
         # process start — tokens don't need to survive a restart because
         # in-memory game state doesn't either.
         self._token_secret = secrets.token_bytes(32)
+        # Party lights service — stateful across a single game.
+        self._lights = MortifyLights(hass)
         # Callbacks for session create/end (e.g. an HA sensor might want
         # to track active games).
         self._session_listeners: list[Callable[[str, GameSession], None]] = []
@@ -210,12 +213,7 @@ class MortifyManager:
         return out
 
     def list_lights(self) -> list[dict[str, Any]]:
-        """Return light entities (including groups) for the lighting picker.
-
-        Light groups appear here as ordinary ``light.*`` entities — the host
-        can pick the group or individual bulbs; ``_resolve_light_targets``
-        handles either at call time.
-        """
+        """Return light entities (including groups) for the lighting picker."""
         area_reg = ar.async_get(self.hass)
         entity_reg = er.async_get(self.hass)
         out: list[dict[str, Any]] = []
@@ -250,12 +248,7 @@ class MortifyManager:
         return out
 
     def list_entities(self) -> list[dict[str, Any]]:
-        """Return entities that make good clue candidates, grouped by area.
-
-        We trim to a curated set of domains so the picker isn't drowned
-        in irrelevant entities (zones, automations, helpers we don't
-        care about). The shape of each item matches what game.py expects.
-        """
+        """Return entities that make good clue candidates, grouped by area."""
         area_reg = ar.async_get(self.hass)
         entity_reg = er.async_get(self.hass)
         out: list[dict[str, Any]] = []
@@ -295,14 +288,7 @@ class MortifyManager:
     # --- music control ---------------------------------------------------
 
     async def play_music(self, session: GameSession) -> None:
-        """Start background music on the session's media_player.
-
-        Mortify doesn't ship its own music files (unlike Beatify/Music
-        Assistant) — we just send a media_player.media_play to whatever
-        is queued. If the speaker has nothing queued, the host's
-        environment is expected to provide it (the original README
-        suggested dropping ambient tracks into /config/www/mortify/).
-        """
+        """Start background music on the session's media_player."""
         if not session.settings.music_player:
             return
         try:
@@ -340,19 +326,55 @@ class MortifyManager:
 
     # --- dramatic lighting -----------------------------------------------
 
+    async def start_lights(self, session: GameSession) -> None:
+        """Take control of the lights at game start (save states, apply mood)."""
+        if not session.settings.light_entity_ids:
+            return
+        targets = self._resolve_light_targets(session.settings.light_entity_ids)
+        if not targets:
+            return
+        await self._lights.start(
+            entity_ids=targets,
+            intensity="medium",
+            light_mode="dynamic",
+        )
+        await self._lights.set_phase(session.state)
+
+    async def drive_lights(self, session: GameSession, mood: str) -> None:
+        """Apply a lighting mood (an act state) or a flash."""
+        if not session.settings.lights_enabled:
+            return
+        if mood == "flash":
+            await self._lights.flash("red")
+            return
+        await self._lights.set_phase(mood)
+
+    async def celebrate_lights(self) -> None:
+        """Run the rainbow celebration sequence on game end."""
+        await self._lights.celebrate()
+
+    async def restore_lights(self, session: GameSession) -> None:
+        """Restore saved light states at game end (or on cleanup)."""
+        if not session.settings.light_entity_ids:
+            return
+        await self._lights.stop()
+
+    def wire_session_lights(self, session: GameSession) -> None:
+        """Hook the session's lighting callback to this manager."""
+        async def on_mood(mood: str) -> None:
+            await self.drive_lights(session, mood)
+        session.set_lights_callback(on_mood)
+
+    # -- kept for compatibility -------------------------------------------
+
     def _resolve_light_targets(self, entity_ids: list[str]) -> list[str]:
         """Expand the host's chosen light selection into concrete light.* ids.
 
         The host may pick individual ``light.*`` entities OR a light *group*
         (also a ``light.*`` entity whose ``entity_id`` attribute lists its
-        members) — this was the trip-up with Philips/Hue groups: a group is
-        itself a light entity, so we accept it directly AND, where a member
-        list is exposed, flatten it so per-bulb effects still land.
-
-        We pass the group entity through as-is (HA fans the service call out
-        to members for us), and additionally include any member ids we can
-        see, de-duplicated. Anything that isn't a light is dropped with a log
-        line so a mis-selected sensor can't break the call.
+        members). We pass the group entity through as-is (HA fans the service
+        call out to members for us), and additionally include any member ids
+        we can see, de-duplicated.
         """
         out: list[str] = []
         seen: set[str] = set()
@@ -361,13 +383,11 @@ class MortifyManager:
                 continue
             domain = eid.split(".", 1)[0]
             if domain != "light":
-                # Not a light — skip, but don't fail the whole call.
                 _LOGGER.debug("Mortify lighting: skipping non-light %s", eid)
                 continue
             if eid not in seen:
                 out.append(eid)
                 seen.add(eid)
-            # If this is a group, also collect its members (best effort).
             state = self.hass.states.get(eid)
             if state is not None:
                 members = state.attributes.get("entity_id")
@@ -377,85 +397,6 @@ class MortifyManager:
                             out.append(m)
                             seen.add(m)
         return out
-
-    async def drive_lights(self, session: GameSession, mood: str) -> None:
-        """Apply a lighting mood (an act state) or a ``"flash"`` to the lights.
-
-        Best-effort and fully guarded — a failure here never affects the game.
-        We always send both ``rgb_color`` (for colour bulbs like Hue) and
-        ``color_temp_kelvin`` (for tunable-white bulbs); HA/each bulb uses
-        whichever it supports and ignores the other.
-        """
-        if not session.settings.lights_enabled:
-            return
-        targets = self._resolve_light_targets(session.settings.light_entity_ids)
-        if not targets:
-            return
-
-        if mood == "flash":
-            await self._light_flash(targets)
-            return
-
-        spec = ACT_LIGHT_MOODS.get(mood)
-        if spec is None:
-            return
-        data: dict[str, Any] = {
-            "rgb_color": spec["rgb_color"],
-            "brightness_pct": spec["brightness_pct"],
-            "color_temp_kelvin": spec["kelvin"],
-            "transition": LIGHT_TRANSITION_S,
-        }
-        await self._call_light_on(targets, data)
-
-    async def _light_flash(self, targets: list[str]) -> None:
-        """A quick red pulse, then restore toward a neutral dim warm glow."""
-        try:
-            await self._call_light_on(targets, {
-                "rgb_color": LIGHT_FLASH_RGB,
-                "brightness_pct": 90,
-                "transition": 0,
-            })
-            await asyncio.sleep(0.6)
-            await self._call_light_on(targets, {
-                "rgb_color": [120, 70, 70],
-                "brightness_pct": 40,
-                "color_temp_kelvin": 2500,
-                "transition": 1,
-            })
-        except Exception:  # noqa: BLE001
-            _LOGGER.debug("Mortify light flash failed", exc_info=True)
-
-    async def _call_light_on(self, targets: list[str], data: dict[str, Any]) -> None:
-        try:
-            await self.hass.services.async_call(
-                "light",
-                "turn_on",
-                {**data},
-                target={"entity_id": targets},
-                blocking=False,
-            )
-        except Exception:  # noqa: BLE001
-            _LOGGER.debug("light.turn_on failed for %s", targets, exc_info=True)
-
-    async def restore_lights(self, session: GameSession) -> None:
-        """Return the lights to a plain warm white at the end of a game."""
-        if not session.settings.lights_enabled:
-            return
-        targets = self._resolve_light_targets(session.settings.light_entity_ids)
-        if not targets:
-            return
-        await self._call_light_on(targets, {
-            "brightness_pct": 80,
-            "color_temp_kelvin": 3000,
-            "transition": 2,
-        })
-
-    def wire_session_lights(self, session: GameSession) -> None:
-        """Hook the session's lighting callback to this manager."""
-        async def on_mood(mood: str) -> None:
-            await self.drive_lights(session, mood)
-
-        session.set_lights_callback(on_mood)
 
 
 def get_manager(hass: HomeAssistant) -> MortifyManager | None:
